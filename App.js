@@ -8,10 +8,20 @@ export default function App() {
   const [courseGoals, setCourseGoals] = useState([]);
 
   const addGoalHandler = (enteredGoalText) => {
+    if (!enteredGoalText || enteredGoalText.trim() === "") {
+      return;
+    }
     setCourseGoals((currentCourseGoals) => [
       ...currentCourseGoals,
       { text: enteredGoalText, id: currentCourseGoals.length + 1 },
     ]);
+  };
+
+  const deleteGoalHandler = (id) => {
+    console.log("delete:", id);
+    setCourseGoals((currentCourseGoals) =>
+      currentCourseGoals.filter((goal) => goal.id !== id)
+    );
   };
 
   return (
@@ -21,7 +31,13 @@ export default function App() {
         <FlatList
           data={courseGoals}
           renderItem={(itemData) => {
-            return <GoalItem text={itemData.item.text} />;
+            return (
+              <GoalItem
+                text={itemData.item.text}
+                id={itemData.item.id}
+                onDeleteItem={deleteGoalHandler}
+              />
+            );
           }}
           alwaysBounceVertical={false}
           keyExtractor={(item, index) => {
